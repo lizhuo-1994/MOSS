@@ -54,9 +54,15 @@ for info in info_list:
     moss_data['chat']['turn_1']['MOSS'] = "<|MOSS|>: 以下是使用Json格式编写的车辆数据:\n {0}<eom>\n".format(str(moss_output))
     moss_data['chat']['category'] = "code"
     print(moss_data)
-    with open('./SFT_data/car_data/conversation_' + str(conversation_id) + '.json', 'w', encoding="utf-8") as f:
-        json.dump(moss_data, f, indent=4, ensure_ascii=False)
-    break
+
+    if conversation_id < 0.7 * len(info_list):
+        with open('./SFT_data/car_data/train/conversation_' + str(conversation_id) + '.json', 'w', encoding="utf-8") as f:
+            json.dump(moss_data, f, indent=4, ensure_ascii=False)
+    else:
+        with open('./SFT_data/car_data/train/conversation_' + str(conversation_id) + '.json', 'w', encoding="utf-8") as f:
+            json.dump(moss_data, f, indent=4, ensure_ascii=False)
+
+    conversation_id += 1
 
 
 
