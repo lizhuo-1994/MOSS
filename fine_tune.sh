@@ -1,5 +1,5 @@
-num_machines=4
-num_processes=$((num_machines * 8))
+num_machines=1
+num_processes=$((num_machines * 4))
 machine_rank=0
 
 accelerate launch \
@@ -8,8 +8,8 @@ accelerate launch \
 	--num_machines $num_machines \
 	--machine_rank $machine_rank \
 	--deepspeed_multinode_launcher standard finetune_moss.py \
-	--model_name_or_path fnlp/moss-moon-003-base \
-	--data_dir ./sft_data/car_data/train \
+	--model_name_or_path fnlp/moss-moon-003-sft \
+	--data_dir ./SFT_data/car_data/ \
 	--output_dir ./ckpts/moss-moon-003-sft \
 	--log_dir ./train_logs/moss-moon-003-sft \
 	--n_epochs 1 \

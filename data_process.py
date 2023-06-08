@@ -29,12 +29,13 @@ conversation_id = 0
 }
 '''
 
-
-
 with open("./carHome.txt", 'r') as f:
     info_list = f.readlines()
 
-moss_data_list = []
+train_data_list = []
+test_data_list = []
+val_data_list = []
+
 for info in info_list:
     json_info = json.loads(info)
     user_input = json_info['chatRecord']['turn_1'][0]['content'][0]
@@ -56,14 +57,29 @@ for info in info_list:
     print(moss_data)
 
     if conversation_id < 0.7 * len(info_list):
-        with open('./SFT_data/car_data/train/conversation_' + str(conversation_id) + '.json', 'w', encoding="utf-8") as f:
-            json.dump(moss_data, f, indent=4, ensure_ascii=False)
-    else:
-        with open('./SFT_data/car_data/train/conversation_' + str(conversation_id) + '.json', 'w', encoding="utf-8") as f:
-            json.dump(moss_data, f, indent=4, ensure_ascii=False)
-
+        train_data_list.append(moss_data)
+    elif conversation_id >= 0.7 * len(info_list) and conversation_id < 0.85 * len(info_list):
+        test_data_list.append(moss_data)
+    elif conversation_id >= 0.85 * len(info_list):
+        val_data_list.append(moss_data)
     conversation_id += 1
 
+with open('./SFT_data/car_data/train.jsonl', 'w', newline='', encoding="utf-8") as f:
+    for moss_data in train_data_list:
+        json_str = json.dumps(moss_data, ensure_ascii=False)
+        print(json_str)
+        f.write(json_str + '\n')
 
+with open('./SFT_data/car_data/test.jsonl', 'w', newline='', encoding="utf-8") as f:
+    for moss_data in test_data_list:
+        json_str = json.dumps(moss_data, ensure_ascii=False)
+        print(json_str)
+        f.write(json_str + '\n')
+
+with open('./SFT_data/car_data/val.jsonl', 'w', newline='', encoding="utf-8") as f:
+    for moss_data in val_data_list:
+        json_str = json.dumps(moss_data, ensure_ascii=False)
+        print(json_str)
+        f.write(json_str + '\n')
 
 
